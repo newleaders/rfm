@@ -98,7 +98,7 @@ module Rfm
   # * *mod_id* is the modification identifier for the record; whenever a record is modified, its +mod_id+
   #   changes so you can tell if the Record object you're looking at is up-to-date as compared to another
   #   copy of the same record
-  class Record < Rfm::Utility::CaseInsensitiveHash
+  class Record < Rfm::Utilities::HashWithIndifferentAccess
   
     attr_reader :record_id, :mod_id, :portals
   
@@ -108,7 +108,7 @@ module Rfm
       @record_id = record['record-id']
       @mod_id = record['mod-id']
       @mods = {}
-      @portals = Rfm::Utility::CaseInsensitiveHash.new
+      @portals = Rfm::Utilities::HashWithIndifferentAccess.new
     
       related_sets = portal.nil? && resultset.include_portals ? record.xpath('relatedset') : []
     

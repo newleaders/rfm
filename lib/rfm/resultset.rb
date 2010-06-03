@@ -66,8 +66,8 @@ module Rfm
     #   after, you want to look at the Record object.
     def initialize(server, xml_response, layout = nil)
       
-      @field_meta = Rfm::Utility::CaseInsensitiveHash.new
-      @portal_meta = Rfm::Utility::CaseInsensitiveHash.new
+      @field_meta = Rfm::Utilities::HashWithIndifferentAccess.new
+      @portal_meta = Rfm::Utilities::HashWithIndifferentAccess.new
       @date_format = nil
       @time_format = nil
       @timestamp_format = nil

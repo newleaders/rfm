@@ -231,7 +231,7 @@ module Rfm
   class AuthenticationError < StandardError; end
   
   autoload :Error, "rfm/error"
-  autoload :Utility, "rfm/utility"
+  autoload :Utilities, "rfm/utilities/hash_with_indifferent_access"
   
   autoload :Server, 'rfm/server'
   

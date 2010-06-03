@@ -1,0 +1,1 @@
+require 'rfm/utilities/core_ext/kernel/singleton_class'

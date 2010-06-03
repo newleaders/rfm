@@ -1,0 +1,1 @@
+require 'rfm/utilities/core_ext/module/delegation'
