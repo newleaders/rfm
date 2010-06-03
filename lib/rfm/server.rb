@@ -106,7 +106,7 @@ module Rfm
   # * *server* is the Server object this database comes from
   # * *name* is the name of this database
   # * *state* is a hash of all server options used to initialize this server
-  class Server
+  class Server < Rfm::Utility::CaseInsensitiveHash
     include Layout
     #
     # To create a Server object, you typically need at least a host name:
