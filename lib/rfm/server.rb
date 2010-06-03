@@ -107,6 +107,7 @@ module Rfm
   # * *name* is the name of this database
   # * *state* is a hash of all server options used to initialize this server
   class Server
+    include Layout
     #
     # To create a Server object, you typically need at least a host name:
     # 
@@ -215,7 +216,8 @@ module Rfm
       @scheme = @state[:ssl] ? "https" : "http"
       @port = @state[:ssl] && options[:port].nil? ? 443 : @state[:port]
     
-      @db = Rfm::Factory::DbFactory.new(self)
+      @db = nil
+      @layout = nil
     end
     
     # Access the database object representing a database on the server. For example:
@@ -230,11 +232,19 @@ module Rfm
     # get no error at this point if the database you access doesn't exist. Instead, you'll
     # receive an error when you actually try to perform some action on a layout from this
     # database.
-    def [](dbname)
-      self.db[dbname]
+    def db(name=nil)
+      return @db if name.nil?
+      @db = name
+      self
     end
     
-    attr_reader :db, :host_name, :port, :scheme, :state
+    def layout(name=nil)
+      return @layout if name.nil?
+      @layout = name
+      self
+    end
+    
+    attr_reader :host_name, :port, :scheme, :state
     
     # Performs a raw FileMaker action. You will generally not call this method directly, but it
     # is exposed in case you need to do something "under the hood."

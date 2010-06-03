@@ -118,41 +118,7 @@ module Rfm
   #   are arrays containing the actual value list items. +value_lists+ will include every value
   #   list that is attached to any field on the layout
   
-  class Layout
-    
-    # Initialize a layout object. You never really need to do this. Instead, just do this:
-    # 
-    #   myServer = Rfm::Server.new(...)
-    #   myDatabase = myServer["Customers"]
-    #   myLayout = myDatabase["Details"]
-    #
-    # This sample code gets a layout object representing the Details layout in the Customers database
-    # on the FileMaker server.
-    # 
-    # In case it isn't obvious, this is more easily expressed this way:
-    #
-    #   myServer = Rfm::Server.new(...)
-    #   myLayout = myServer["Customers"]["Details"]
-    def initialize(name, db)
-      @name = name
-      @db = db
-      
-      @loaded = false
-      @field_controls = Rfm::Utility::CaseInsensitiveHash.new
-      @value_lists = Rfm::Utility::CaseInsensitiveHash.new
-    end
-    
-    attr_reader :name, :db
-    
-    def field_controls
-      load unless @loaded
-      @field_controls
-    end
-    
-    def value_lists
-      load unless @loaded
-      @value_lists
-    end
+  module Layout
     
     # Returns a ResultSet object containing _every record_ in the table associated with this layout.
     def all(options = {})
@@ -223,53 +189,13 @@ module Rfm
     
     private
     
-    def load
-      @loaded = true
-      fmpxmllayout = @db.server.load_layout(self).body
-      doc = REXML::Document.new(fmpxmllayout)
-      root = doc.root
-      
-      # check for errors
-      error = root.elements['ERRORCODE'].text.to_i
-      raise Rfm::Error.getError(error) if error != 0
-      
-      # process valuelists
-      if root.elements['VALUELISTS'].size > 0
-        root.elements['VALUELISTS'].each_element('VALUELIST') { |valuelist|
-          name = valuelist.attributes['NAME']
-          @value_lists[name] = valuelist.elements.collect {|e| e.text}
-        }
-        @value_lists.freeze
-      end
-      
-      # process field controls
-      root.elements['LAYOUT'].each_element('FIELD') { |field| 
-        name = field.attributes['NAME']
-        style = field.elements['STYLE'].attributes['TYPE']
-        value_list_name = field.elements['STYLE'].attributes['VALUELIST']
-        value_list = @value_lists[value_list_name] if value_list_name != ''
-        field_control = FieldControl.new(name, style, value_list_name, value_list)
-        existing = @field_controls[name]
-        if existing
-          if existing.kind_of?(Array)
-            existing << field_control
-          else
-            @field_controls[name] = Array[existing, field_control]
-          end
-        else
-          @field_controls[name] = field_control
-        end
-      }
-      @field_controls.freeze      
-    end
-    
     def get_records(action, extra_params = {}, options = {})
-      Rfm::Result::ResultSet.new(@db.server, @db.server.do_action(@db.account_name, 
-      @db.password, action, params().merge(extra_params), options).body, self)
+      Rfm::Result::ResultSet.new(self, self.do_action(@state[:account_name], 
+        @state[:password], action, params().merge(extra_params), options).body )
     end
     
     def params
-      {"-db" => @db.name, "-lay" => self.name}
+      {"-db" => @db, "-lay" => @layout}
     end
   end
 end

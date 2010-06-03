@@ -231,14 +231,12 @@ module Rfm
   class AuthenticationError < StandardError; end
   
   autoload :Error, "rfm/error"
-  autoload :Factory, "rfm/factory"
-  autoload :Result, "rfm/result"
   autoload :Utility, "rfm/utility"
   
-  autoload :Database, 'rfm/commands/database'
-  autoload :FieldControl, 'rfm/commands/field_control'
+  autoload :Server, 'rfm/server'
   autoload :Layout, 'rfm/commands/layout'
-  autoload :Script, 'rfm/commands/script'
-  autoload :Server, 'rfm/commands/server'
+  
+  autoload :Result, "rfm/result"
+  autoload :FieldControl, 'rfm/field_control'
   
 end
