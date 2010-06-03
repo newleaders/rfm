@@ -106,7 +106,7 @@ module Rfm
   # * *server* is the Server object this database comes from
   # * *name* is the name of this database
   # * *state* is a hash of all server options used to initialize this server
-  class Server < Rfm::Utility::CaseInsensitiveHash
+  class Server
     include Layout
     #
     # To create a Server object, you typically need at least a host name:
@@ -314,9 +314,9 @@ module Rfm
             response.verify_mode = OpenSSL::SSL::VERIFY_NONE
           end
         end
-        p "sending request #{time = Time.now}"
+
         response = response.start { |http| http.request(request) }
-        p "request returned #{time - Time.now}"
+
         if @state[:log_response] == true
           response.to_hash.each { |key, value| warn "#{key}: #{value}" }
           warn response.body

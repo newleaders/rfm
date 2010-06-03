@@ -234,6 +234,8 @@ module Rfm
   autoload :Utility, "rfm/utility"
   
   autoload :Server, 'rfm/server'
+  
+  autoload :Base, 'rfm/base'
   autoload :Layout, 'rfm/commands/layout'
   
   autoload :Resultset, 'rfm/resultset'
