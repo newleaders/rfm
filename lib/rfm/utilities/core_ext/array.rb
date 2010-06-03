@@ -1,0 +1,1 @@
+require 'rfm/utilities/array/extract_options'
