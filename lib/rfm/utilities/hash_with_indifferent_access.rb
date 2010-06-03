@@ -1,4 +1,4 @@
-require 'rfm/utilities/core_ext/hash/keys'
+require 'rfm/utilities/core_ext/hash'
 module Rfm
 
   # This class has dubious semantics and we only have it so that
