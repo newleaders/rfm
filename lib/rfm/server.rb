@@ -205,9 +205,10 @@ module Rfm
         :account_name => '',
         :password => '',
         :log_actions => false,
-        :log_responses => false,
+        :log_response => false,
         :warn_on_redirect => true,
-        :raise_on_401 => false
+        :raise_on_401 => false,
+        :include_portals => false
       }.merge(options)
     
       @state.freeze
@@ -273,6 +274,11 @@ module Rfm
     #     },
     #     { :max_records => 20 }
     #   )
+    def get_records(action, extra_params = {}, options = {})
+      Rfm::Resultset.new(self, self.do_action(@state[:account_name], 
+        @state[:password], action, {"-db" => @db, "-lay" => @layout}.merge(extra_params), options).body )
+    end
+    
     def do_action(account_name, password, action, args, options = {})
       post = args.merge(expand_options(options)).merge({action => ''})
       http_fetch(@host_name, @port, "/fmi/xml/fmresultset.xml", account_name, password, post)
@@ -308,10 +314,10 @@ module Rfm
             response.verify_mode = OpenSSL::SSL::VERIFY_NONE
           end
         end
-    
+        p "sending request #{time = Time.now}"
         response = response.start { |http| http.request(request) }
-    
-        if @state[:log_responses] == true
+        p "request returned #{time - Time.now}"
+        if @state[:log_response] == true
           response.to_hash.each { |key, value| warn "#{key}: #{value}" }
           warn response.body
         end

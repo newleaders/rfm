@@ -187,15 +187,5 @@ module Rfm
       return nil
     end
     
-    private
-    
-    def get_records(action, extra_params = {}, options = {})
-      Rfm::Result::ResultSet.new(self, self.do_action(@state[:account_name], 
-        @state[:password], action, params().merge(extra_params), options).body )
-    end
-    
-    def params
-      {"-db" => @db, "-lay" => @layout}
-    end
   end
 end

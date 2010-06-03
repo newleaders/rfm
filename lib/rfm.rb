@@ -236,7 +236,6 @@ module Rfm
   autoload :Server, 'rfm/server'
   autoload :Layout, 'rfm/commands/layout'
   
-  autoload :Result, "rfm/result"
-  autoload :FieldControl, 'rfm/field_control'
+  autoload :Resultset, 'rfm/resultset'
   
 end
