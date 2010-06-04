@@ -118,9 +118,7 @@ module Rfm
       end
       
       records = doc.xpath('/fmresultset/resultset/record')
-      records.each do |record|
-        self << Rfm::Base.new(record, self, @field_meta)
-      end
+      Rfm::Base.build_records(records, self, @field_meta)
     end
     
     protected

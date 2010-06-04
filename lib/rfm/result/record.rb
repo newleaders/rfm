@@ -104,20 +104,20 @@ module Rfm
   
     # Initializes a Record object. You really really never need to do this yourself. Instead, get your records
     # from a ResultSet object.
-    def initialize(record, resultset, fields, portal=nil)
+    def initialize(record, result, field_meta, portal=nil)
       @record_id = record['record-id']
       @mod_id = record['mod-id']
       @mods = {}
       @portals = Rfm::Utilities::HashWithIndifferentAccess.new
     
-      related_sets = portal.nil? && resultset.include_portals ? record.xpath('relatedset') : []
+      related_sets = portal.nil? && result.include_portals ? record.xpath('relatedset') : []
     
       record.xpath('field').each do |field|
         field_name = field['name']
         field_name.sub!(Regexp.new(portal + '::'), '') if portal
         datum = []
         field.xpath('data').each do |x| 
-          datum.push(coerce(x.inner_text, fields[field_name], resultset))
+          datum.push(coerce(x.inner_text, field_meta[field_name], result))
         end
       
         if datum.length == 1
@@ -134,13 +134,19 @@ module Rfm
           tablename, records = relatedset['table'], []
 
           relatedset.xpath('record').each do |record|
-            records << Record.new(record, resultset, resultset.portal_meta[tablename], tablename)
+            records << self.new(record, result, result.portal_meta[tablename], tablename)
           end
         
           @portals[tablename] = records
         end
       end
       @loaded = true
+    end
+    
+    def self.build_records(records, result, field_meta, portal=nil)
+      records.each do |record|
+        result << self.new(record, result, field_meta, portal)
+      end
     end
   
     def coerce(value, field, resultset)
