@@ -177,8 +177,8 @@ module Rfm
     # server hit is incurred.
     def save
       if @mods.size > 0
-        complete_edit = self.class.edit(self.record_id, @mods)[0]
-        self.merge(complete_edit)
+        complete_edit = self.class.edit(self.record_id, @mods).first
+        self.merge!(complete_edit)
         @mods.clear
       end
     end
@@ -187,8 +187,11 @@ module Rfm
     # modified after the record was fetched but before it was saved. In other words, prevents you from
     # accidentally overwriting changes someone else made to the record.
     def save_if_not_modified
-      self.merge(self.class.edit(@record_id, @mods, {:modification_id => @mod_id})[0]) if @mods.size > 0
-      @mods.clear
+      if @mods.size > 0
+        complete_edit = self.class.edit(@record_id, @mods, {:modification_id => @mod_id}).first
+        self.merge!(complete_edit)
+        @mods.clear
+      end
     end
   
     # Gets the value of a field from the record. For example:
@@ -205,7 +208,7 @@ module Rfm
     # When you do, the change is noted, but *the data is not updated in FileMaker*. You must call
     # Record::save or Record::save_if_not_modified to actually save the data.
     def []=(name, value)
-      return super unless @loaded # keeps us from getting mods during initialization
+      return super unless @loaded # keeps from getting mods during initialization
       if self[name] != nil
         @mods[name] = value
       else
