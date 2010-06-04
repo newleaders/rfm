@@ -7,8 +7,8 @@
 # License::   See MIT-LICENSE for details
 require 'nokogiri'
 require 'bigdecimal'
-require 'rfm/resultset/field'
-require 'rfm/resultset/record'
+require 'rfm/result/field'
+require 'rfm/result/record'
 
 module Rfm
 
@@ -38,7 +38,7 @@ module Rfm
   # * *portals* is a hash with table occurrence names for keys and arrays of Field objects for values;
   #   it provides metadata about the portals in the ResultSet and the Fields on those portals
   
-  class Resultset < Array
+  class Result
     instance_methods.each { |m| undef_method m unless m =~ /(^__|^send$|^object_id$)/ }
     
     attr_reader :include_portals, :field_meta, :portal_meta, :date_format, :time_format, :timestamp_format, :total_count, :foundset_count
@@ -119,7 +119,7 @@ module Rfm
       
       records = doc.xpath('/fmresultset/resultset/record')
       records.each do |record|
-        self << Record.new(record, self, @field_meta)
+        self << Rfm::Base.new(record, self, @field_meta)
       end
     end
     

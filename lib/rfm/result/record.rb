@@ -140,7 +140,7 @@ module Rfm
           @portals[tablename] = records
         end
       end
-
+      @loaded = true
     end
   
     def coerce(value, field, resultset)
@@ -170,15 +170,18 @@ module Rfm
     # to optimize on your end. Just save, and if you've changed the record it will be saved. If not, no
     # server hit is incurred.
     def save
-      self.merge(@layout.edit(self.record_id, @mods)[0]) if @mods.size > 0
-      @mods.clear
+      if @mods.size > 0
+        complete_edit = self.class.edit(self.record_id, @mods)[0]
+        self.merge(complete_edit)
+        @mods.clear
+      end
     end
 
     # Like Record::save, except it fails (and raises an error) if the underlying record in FileMaker was
     # modified after the record was fetched but before it was saved. In other words, prevents you from
     # accidentally overwriting changes someone else made to the record.
     def save_if_not_modified
-      self.merge(@layout.edit(@record_id, @mods, {:modification_id => @mod_id})[0]) if @mods.size > 0
+      self.merge(self.class.edit(@record_id, @mods, {:modification_id => @mod_id})[0]) if @mods.size > 0
       @mods.clear
     end
   
@@ -195,11 +198,10 @@ module Rfm
     #
     # When you do, the change is noted, but *the data is not updated in FileMaker*. You must call
     # Record::save or Record::save_if_not_modified to actually save the data.
-    def []=(pname, value)
+    def []=(name, value)
       return super unless @loaded # keeps us from getting mods during initialization
-      name = pname
       if self[name] != nil
-        @mods[name] = val
+        @mods[name] = value
       else
         raise Rfm::ParameterError.new("You attempted to modify a field called '#{name}' on the Rfm::Record object, but that field does not exist.")
       end

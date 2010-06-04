@@ -1,8 +1,10 @@
 require 'nokogiri'
 require 'rfm/utilities/core_ext/class'
+require 'rfm/utilities/core_ext/module'
+require 'rfm/result/record'
 
 module Rfm  
-  class Base
+  class Base < Record
 
     kattr_writer :host, :instance_writer => false
     @@host = 'localhost'
@@ -29,9 +31,12 @@ module Rfm
     @@warn_on_redirect = true
     
     kattr_accessor :raise_on_401
+    kattr_accessor :include_portals
     
     class << self
       
+      delegate :get_records, :to => :server
+       
       def host(*host) 
         return @@host if host.empty?
         @@host = host[0]
@@ -59,7 +64,31 @@ module Rfm
         yield self if block_given?
       end
       
+      def server
+        @server ||= Rfm::Server.new(
+          :host => @@host,
+          :account_name => @@account,
+          :password => @@password,
+          :root_cert_name => @@pem,
+          :port => @@port,
+          :include_portals => @@include_portals,
+          :log_actions => @@log_actions,
+          :log_response => @@log_responses,
+          :ssl => @@ssl,
+          :root_cert => true,
+          :warn_on_redirect => @@warn_on_redirect,
+          :raise_on_401 => @@raise_on_401
+        )
+        @server.db = @@database
+        @server.layout = @@default_layout
+        @server
+      end
+      
     end
     
+  end
+  
+  Base.class_eval do
+    extend Layout
   end
 end

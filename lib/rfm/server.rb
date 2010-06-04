@@ -246,6 +246,7 @@ module Rfm
     end
     
     attr_reader :host_name, :port, :scheme, :state
+    attr_writer :db, :layout
     
     # Performs a raw FileMaker action. You will generally not call this method directly, but it
     # is exposed in case you need to do something "under the hood."
@@ -275,7 +276,7 @@ module Rfm
     #     { :max_records => 20 }
     #   )
     def get_records(action, extra_params = {}, options = {})
-      Rfm::Resultset.new(self, self.do_action(@state[:account_name], 
+      Rfm::Result.new(self, self.do_action(@state[:account_name], 
         @state[:password], action, {"-db" => @db, "-lay" => @layout}.merge(extra_params), options).body )
     end
     

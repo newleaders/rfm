@@ -234,10 +234,9 @@ module Rfm
   autoload :Utilities, "rfm/utilities/hash_with_indifferent_access"
   
   autoload :Server, 'rfm/server'
-  
   autoload :Base, 'rfm/base'
   autoload :Layout, 'rfm/commands/layout'
   
-  autoload :Resultset, 'rfm/resultset'
+  autoload :Result, 'rfm/result'
   
 end
