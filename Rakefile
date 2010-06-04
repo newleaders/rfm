@@ -6,10 +6,10 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "lardawge-rfm"
     gem.summary = "Ruby to Filemaker adapter"
-    gem.description = "Rfm brings your FileMaker data to Ruby. Now your Ruby scripts and Rails applications can talk directly to your FileMaker server."
+    gem.description = "Rfm is a bridge between FileMaker and Ruby/Rails. Your Ruby scripts and Rails applications can talk directly to your FileMaker server."
     gem.email = "http://groups.google.com/group/rfmcommunity"
-    gem.homepage = "http://sixfriedrice.com/wp/products/rfm/"
-    gem.authors = ["Geoff Coffey", "Mufaddal Khumri", "Atsushi Matsuo", "Larry Sprock"]
+    gem.homepage = "http://github.com/lardawge/rfm"
+    gem.authors = ["Larry Sprock", "Geoff Coffey", "Mufaddal Khumri", "Atsushi Matsuo"]
     gem.files = FileList['lib/**/*']
     gem.add_dependency('nokogiri')
     gem.rdoc_options = [ "--line-numbers", "--main", "README.rdoc" ]

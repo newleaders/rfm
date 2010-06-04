@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{lardawge-rfm}
-  s.version = "1.4.0"
+  s.version = "1.9.0.pre1"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Geoff Coffey", "Mufaddal Khumri", "Atsushi Matsuo", "Larry Sprock"]
-  s.date = %q{2010-05-31}
-  s.description = %q{Rfm brings your FileMaker data to Ruby. Now your Ruby scripts and Rails applications can talk directly to your FileMaker server.}
+  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
+  s.authors = ["Larry Sprock", "Geoff Coffey", "Mufaddal Khumri", "Atsushi Matsuo"]
+  s.date = %q{2010-06-04}
+  s.description = %q{Rfm is a bridge between FileMaker and Ruby/Rails. Your Ruby scripts and Rails applications can talk directly to your FileMaker server.}
   s.email = %q{http://groups.google.com/group/rfmcommunity}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -18,21 +18,33 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     "lib/rfm.rb",
-     "lib/rfm/commands/database.rb",
-     "lib/rfm/commands/field_control.rb",
+     "lib/rfm/base.rb",
      "lib/rfm/commands/layout.rb",
-     "lib/rfm/commands/script.rb",
-     "lib/rfm/commands/server.rb",
      "lib/rfm/error.rb",
-     "lib/rfm/factory.rb",
-     "lib/rfm/filemaker_errors.rb",
      "lib/rfm/result.rb",
-     "lib/rfm/utility.rb"
+     "lib/rfm/result/field.rb",
+     "lib/rfm/result/record.rb",
+     "lib/rfm/server.rb",
+     "lib/rfm/utilities/core_ext.rb",
+     "lib/rfm/utilities/core_ext/array.rb",
+     "lib/rfm/utilities/core_ext/array/extract_options.rb",
+     "lib/rfm/utilities/core_ext/class.rb",
+     "lib/rfm/utilities/core_ext/class/attribute.rb",
+     "lib/rfm/utilities/core_ext/class/attribute_accessors.rb",
+     "lib/rfm/utilities/core_ext/hash.rb",
+     "lib/rfm/utilities/core_ext/hash/keys.rb",
+     "lib/rfm/utilities/core_ext/kernel.rb",
+     "lib/rfm/utilities/core_ext/kernel/singleton_class.rb",
+     "lib/rfm/utilities/core_ext/module.rb",
+     "lib/rfm/utilities/core_ext/module/attribute_accessors.rb",
+     "lib/rfm/utilities/core_ext/module/delegation.rb",
+     "lib/rfm/utilities/core_ext/module/remove_method.rb",
+     "lib/rfm/utilities/hash_with_indifferent_access.rb"
   ]
-  s.homepage = %q{http://sixfriedrice.com/wp/products/rfm/}
+  s.homepage = %q{http://github.com/lardawge/rfm}
   s.rdoc_options = ["--line-numbers", "--main", "README.rdoc"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.6}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{Ruby to Filemaker adapter}
   s.test_files = [
     "spec/rfm/error_spec.rb",
@@ -43,7 +55,7 @@ Gem::Specification.new do |s|
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<nokogiri>, [">= 0"])
     else
       s.add_dependency(%q<nokogiri>, [">= 0"])
